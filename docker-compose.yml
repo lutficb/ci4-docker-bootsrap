@@ -1,0 +1,33 @@
+services:
+  web:
+    build: php-apache
+    container_name: mastatv-app
+    ports:
+      - "8081:80"
+    volumes:
+      - ./app:/var/www/html/app/
+
+  db:
+    image: mysql:5.7
+    container_name: mastatv-db
+    restart: always
+    ports:
+      - 8306:3306
+    volumes:
+      - ./data:/var/libdata/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: mastatv
+      MYSQL_USER: mastatv
+      MYSQL_DATABASE: mastatv
+      SERVICE_TAG: dev
+      SERVICE_NAME: mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: mastatv-pdadmin
+    links:
+      - db
+    restart: always
+    ports:
+      - 8806:80
